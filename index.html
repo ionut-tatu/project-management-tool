@@ -1,33 +1,42 @@
 <!doctype html>
-<html>
+<html ng-app="projectManagementTool">
 <head>
 <title>My Project Management Tool</title>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="css/main.css">
+
+<script type="text/javascript" src="js/angular.min.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
 </head>
-<body>
+<body ng-controller="ProjectController">
 	<!-- Markup goes here -->
 
 	<header class="container-fluid">
 		<div class="row topLinks">
 			<div class="col-xs-12 col-sm-12 col-md-12">
-				<a href="#" class="">My Projects</a>
-				<a href="#" class="addProject" title="Add Project">
+				<a href="#" class="" ng-click="changeState();projectsListState = 'visible';">
+					My Projects
+				</a>
+				<a href="#" class="addProject" title="Add Project" 
+					ng-click="changeState();addProjectState = 'visible'">
 					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 				</a>
 			</div>
 		</div>
 		<div class="row myProject">
 			<div class="col-xs-12 col-sm-12 col-md-12">
-				<h4>#Project Name</h4>
+				<h4 ng-show="selectedProject >= 0">{{ projects[selectedProject].name }}</h4>
+				<h4 ng-show="selectedProject < 0">No Project Selected</h4>
 			</div>
 		</div>
 	</header>
 
 	<main class="container">
 
-		<div class="col-sm-offset-3 col-sm-6" id="addProjectWrapper">
+		<div class="col-sm-offset-3 col-sm-6" 
+			id="addProjectWrapper"
+			ng-class="addProjectState">
 			<h3>New Project</h3>
 
 			<form class="form-horizontal">
@@ -36,7 +45,7 @@
 						Project Name
 					</label>
 					<div class="col-xs-8 col-sm-8 col-md-9">
-						<input type="text" name="" class="form-control" placeholder="Personal Website, Gym Exercises">
+						<input type="text" ng-model="projectName" class="form-control" placeholder="Personal Website, Gym Exercises" value="{{ projectName }}">
 					</div>
 				</div>
 				<div class="form-group">
@@ -44,69 +53,44 @@
 						&nbsp;
 					</label>
 					<div class="col-xs-8 col-sm-8 col-md-9">
-						<a href="#" class="btn btn-success">Save</a>
+						<a href="#" class="btn btn-success" ng-click="addProject(projectName)">Save</a>
 					</div>
 				</div>
 			</form>
 		</div>
 
-		<div class="col-sm-offset-3 col-sm-6" id="projectsList">
+		<div class="col-sm-offset-3 col-sm-6" id="projectsList"
+			ng-class="projectsListState">
 			<h3>My Projects</h3>
 
-			<div class="panel panel-primary">
+			<div class="panel panel-primary" ng-click="selectProject($index)" ng-repeat="project in projects">
 			  	<div class="panel-heading">
-			    	<h3 class="panel-title">Project Name</h3>
+			    	<h3 class="panel-title">{{ project.name }}</h3>
 			  	</div>
 			  	<div class="panel-body">
-			    	2/1 Tasks/Completed
-			  	</div>
-			</div>
-
-			<div class="panel panel-success">
-			  	<div class="panel-heading">
-			    	<h3 class="panel-title">Project Name</h3>
-			  	</div>
-			  	<div class="panel-body">
-			    	3/3 Tasks/Completed
-			  	</div>
-			</div>
-
-			<div class="panel panel-danger">
-			  	<div class="panel-heading">
-			    	<h3 class="panel-title">Project Name</h3>
-			  	</div>
-			  	<div class="panel-body">
-			    	4/0 Tasks/Completed
+			    	{{ project.tasks.length }} Tasks
 			  	</div>
 			</div>
 		</div>
 
-		<div class="col-sm-offset-3 col-sm-6" id="tasksList">
-			<h3>Project Name Tasks</h3>
+		<div class="col-sm-offset-3 col-sm-6" id="tasksList"
+			ng-class="tasksListState">
+			<h3>{{ projects[selectedProject].name }} Tasks</h3>
 
-			<div class="panel panel-default">
+			<div class="panel panel-{{ task.status === 'complete' ? 'success' : 'default' }}" ng-model="projects" ng-repeat="task in projects[selectedProject].tasks">
 			  	<div class="panel-body">
-			    	Task name
+			    	#{{ ($index+1) }}. {{ task.name }}
+			    	<span class="glyphicon glyphicon-ok" aria-hidden="true" ng-click="closeTask(selectedProject, $index, 'complete')"></span>
+			    	<span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="closeTask(selectedProject, $index, 'remove')"></span>
 			  	</div>
 			</div>
 
-			<div class="panel panel-default">
-			  	<div class="panel-body">
-			    	Task name
-			  	</div>
-			</div>
-
-			<div class="panel panel-success">
-			  	<div class="panel-body">
-			    	Task name
-			  	</div>
-			</div>
-
-			<a href="#" class="btn btn-success">Add Task</a>
+			<a href="#" class="btn btn-success" ng-click="addTask($index)">Add Task</a>
 		</div>
 
-		<div class="col-sm-offset-3 col-sm-6" id="addTaskWrapper">
-			<h3>Project Name - New Task</h3>
+		<div class="col-sm-offset-3 col-sm-6" id="addTaskWrapper"
+			ng-class="addTaskState">
+			<h3>{{ projects[selectedProject].name }} - New Task</h3>
 
 			<form class="form-horizontal">
 				<div class="form-group">
@@ -114,7 +98,7 @@
 						Task Name
 					</label>
 					<div class="col-xs-8 col-sm-8 col-md-9">
-						<input type="text" name="" class="form-control" placeholder="Learn HTML5">
+						<input type="text" ng-model="taskName" value="taskName" class="form-control" placeholder="Learn HTML5">
 					</div>
 				</div>
 				<div class="form-group">
@@ -122,7 +106,7 @@
 						&nbsp;
 					</label>
 					<div class="col-xs-8 col-sm-8 col-md-9">
-						<a href="#" class="btn btn-success">Save</a>
+						<a href="#" class="btn btn-success" ng-click="saveTask()">Save</a>
 					</div>
 				</div>
 			</form>
