@@ -13,7 +13,6 @@ app.controller('ProjectController', ['$scope', function($scope){
 		$scope.addProjectState = 'invisible';
 	}
 
-
 	if($scope.projects.length === 0) {
 		$scope.addProjectState = 'visible';
 	}
@@ -31,6 +30,9 @@ app.controller('ProjectController', ['$scope', function($scope){
 		$scope.projectsListState = 'visible';
 
 		$scope.selectedProject = -1;
+
+		$scope.addProjectForm.$setPristine();
+		$scope.addProjectForm.$setUntouched();
 	}
 
 	$scope.selectProject = function(index) {
@@ -53,11 +55,16 @@ app.controller('ProjectController', ['$scope', function($scope){
 		$scope.tasksListState = 'visible';
 
 		$scope.projects[$scope.selectedProject].tasks.push({
-			'name': $scope.taskName,
+			'name': $scope.task.name,
+			'description': $scope.task.description,
 			'status': 'uncomplete'
 		});
 
-		$scope.taskName = '';
+		$scope.task.name = '';
+		$scope.task.description = '';
+
+		$scope.addTaskForm.$setPristine();
+		$scope.addTaskForm.$setUntouched();
 	}
 
 	$scope.closeTask = function(projectId, taskId, action) {

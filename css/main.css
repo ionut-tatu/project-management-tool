@@ -4,6 +4,30 @@ h1,h2,h3,h4,h5,h6 {
 	color: #1B2432;
 	font-weight: 600;
 }
+textarea::-webkit-input-placeholder,
+input[type="text"]::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+ 	font-style: italic;
+}
+input[type="text"]::-moz-placeholder,
+textarea::-moz-placeholder { /* Firefox 19+ */
+  	font-style: italic;
+}
+input[type="text"]:-ms-input-placeholder,
+textarea:-ms-input-placeholder { /* IE 10+ */
+  	font-style: italic;
+}
+input[type="text"]:-moz-placeholder,
+textarea:-moz-placeholder { /* Firefox 18- */
+ 	font-style: italic;
+}
+textarea,
+input[type="text"] {
+	outline: none;
+  	border-color: #ccc !important;
+ 	-webkit-box-shadow: none !important;
+ 	-moz-box-shadow: none !important;
+  	box-shadow: none !important;
+}
 
 /* Header */
 body {
@@ -109,7 +133,7 @@ main > div.visible, main > div.invisible {
     font-size: 18px;
     top: 15px;
     margin-top: 40px;
-	transition: opacity 1.5s, margin-top 1.5s;
+	transition: opacity 1s, margin-top 1s;
 	visibility: hidden;
 	opacity: 0;
 }
@@ -119,14 +143,33 @@ main > div.visible, main > div.invisible {
 #tasksList .panel .panel-body span.glyphicon-remove {
     right: 40px;
 }
+#tasksList .panel .panel-body span.glyphicon-flag {
+    right: 10px;
+    color: #509D12;
+    visibility: visible;
+	opacity: 1;
+	margin-top: 0;
+}
 #tasksList .panel .panel-body:hover span {
 	visibility: visible;
 	opacity: 1;
 	margin-top: 0;
 }
 #tasksList .panel .panel-body span.glyphicon-ok:hover {
-    color: green;
+    color: #509D12;
 }
 #tasksList .panel .panel-body span.glyphicon-remove:hover {
     color: red;
+}
+
+input.ng-invalid.ng-touched,
+form.ng-submitted input.ng-invalid {
+  	border: 1px solid #DA3637 !important;
+}
+input.ng-valid.ng-dirty {
+  	border: 1px solid #509D12 !important;
+}
+.ng-invalid .btn {
+  	background: gray;
+  	border-color: gray;
 }
